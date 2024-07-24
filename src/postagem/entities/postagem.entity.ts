@@ -1,6 +1,7 @@
 import { Transform, TransformFnParams } from "class-transformer";
 import { IsNotEmpty, isNotEmpty } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Tema } from "../../tema/entities/tema.entity";
 
 // criando os recursos
 @Entity({name: 'tb_postagem'})
@@ -21,5 +22,10 @@ export class Postagem {
 
     @UpdateDateColumn() // a data e a hora serao preenchiadas automaticamente
     data: Date;
+
+    @ManyToOne(() => Tema , (tema) => tema.postagem,{
+        onDelete: "CASCADE"
+    })
+    tema:Tema
 
 }
