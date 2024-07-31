@@ -6,6 +6,7 @@ import { STATUS_CODES } from "http";
 
 @Injectable()
 export class PostagemService {
+    TemaService: any;
 
     // injetar repositorio dentro da classe postagem
 
@@ -16,7 +17,11 @@ export class PostagemService {
 
     async findAll(): Promise<Postagem[]>{
         // SELECT * FROM tb_postagens;
-        return await this.postagemRepository.find();
+        return await this.postagemRepository.find({
+            relations: {
+                tema: true
+            }
+        });
 
     }
     async findById(id: number): Promise<Postagem>{
@@ -24,6 +29,9 @@ export class PostagemService {
         let buscaPostagem = await this.postagemRepository.findOne({
             where:{
                 id
+            },
+            relations: {
+                tema: true
             }
         })
         if (!buscaPostagem)
@@ -36,19 +44,39 @@ export class PostagemService {
         return await this.postagemRepository.find({
             where:{
                 titulo: ILike(`%${titulo}%`)
+            },
+            relations: {
+                tema: true
             }
         })
     }
 
     // salvar 
     async create(postagem: Postagem): Promise<Postagem>{
+        if (postagem.tema){
+            let tema =  await this.TemaService.findById(postagem.tema.id)
+            if (!tema)
+                throw new HttpException('tema nao encontrado!', HttpStatus.NOT_FOUND)
+            return await this.postagemRepository.save(postagem);
+        }
         return await this.postagemRepository.save(postagem);
     }
 
     async update(postagem: Postagem): Promise<Postagem>{
+
         let buscaPostagem = await this.findById(postagem.id)
+
         if (!buscaPostagem || !postagem.id)
             throw new HttpException("A Postagem nao foi encontrada!", HttpStatus.NOT_FOUND)
+
+        if (postagem.tema){
+            let tema = await this.TemaService.findById(postagem.tema.id)
+
+            if (!tema) 
+                throw new HttpException('tema nao encontrado', HttpStatus.NOT_FOUND)
+            return await this.postagemRepository.save(postagem);
+
+        }
         return await this.postagemRepository.save(postagem);
     }
 
