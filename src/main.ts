@@ -10,7 +10,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors()
-  await app.listen(3000);console.log('server is running')
+  await app.listen(4000);console.log('server is running')
 
 }
 bootstrap();
