@@ -1,23 +1,3 @@
-<<<<<<< HEAD
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Tema } from "../entities/tema.entity";
-
-
-
-@Injectable()
-export class TemaService{
-    constructor(
-        @InjectRepository(Tema)
-        private temaRepository: Repository<Tema>
-    ) {}
-    
-    async findAll(): Promise<Tema[]>{
-        return await this.temaRepository.find();
-
-    }
-=======
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, ILike, Repository } from "typeorm";
@@ -91,5 +71,4 @@ export class TemaService {
 
     }
 
->>>>>>> af2ced332addb4dddb60666f941b8a4ff7b592fd
 }
