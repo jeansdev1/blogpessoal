@@ -11,7 +11,7 @@ export class Bcrypt {
         return await bcrypt.hash(senha, saltos)
     }
 
-    async compararSenhas(senhaBanco: string, senhaDigitada: string): Promise<boolean> {
+    async compararSenhas(senhaDigitada: string, senhaBanco: string): Promise<boolean> {
         return await bcrypt.compare(senhaDigitada, senhaBanco);
     }
 }
