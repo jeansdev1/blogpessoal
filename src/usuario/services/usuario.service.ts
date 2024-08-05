@@ -2,19 +2,16 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Bcrypt } from '../../auth/bcrypt/bcrypt';
-import { Usuario } from '../entities/usuario.module';
+import { Usuario } from '../entities/usuario.entity';
 
 @Injectable()
 export class UsuarioService {
     constructor(
         @InjectRepository(Usuario)
         private usuarioRepository: Repository<Usuario>,
-
-        // @Injectable injetamos o objeto para ter acesso ao metodo de criptografia  classe de servico que pode ser injetada em outras classes
         private bcrypt: Bcrypt
     ) { }
 
-    // fazer login, digitando usuario e a senha
     async findByUsuario(usuario: string): Promise<Usuario | undefined> {
         return await this.usuarioRepository.findOne({
             where: {
@@ -53,9 +50,9 @@ export class UsuarioService {
     }
 
     async create(usuario: Usuario): Promise<Usuario> {
-
-        // saber se o usuario existe
+        
         let buscaUsuario = await this.findByUsuario(usuario.usuario);
+
         if (!buscaUsuario) {
             usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha)
             return await this.usuarioRepository.save(usuario);

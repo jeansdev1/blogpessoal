@@ -1,37 +1,36 @@
 import { Transform, TransformFnParams } from "class-transformer";
-import { IsNotEmpty, isNotEmpty } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Tema } from "../../tema/entities/tema.entity";
-import { Usuario } from "../../usuario/entities/usuario.module";
+import { Usuario } from "../../usuario/entities/usuario.entity";
 
-// criando os recursos
-@Entity({name: 'tb_postagem'})
-export class Postagem {
-    
-    @PrimaryGeneratedColumn()  // id int AUTOINCRIMENT , chave primaria auto incrimental
-    id: number; 
+@Entity({name: "tb_postagens"}) // Criando a Tabela
+export class Postagem{
 
-    @Transform(({ value }: TransformFnParams) => value?.trim()) // bloquear apenas espacos em branco
-    @IsNotEmpty()  // nao aceita valor vazio
-    @Column({length: 100, nullable: false}) // defini o tamanho e nao aceita valor nulo
+    @PrimaryGeneratedColumn() // Chave Primária Autoincremental
+    id: number;
+
+    @Transform(({ value }: TransformFnParams) => value?.trim()) // Bloquear apenas espaços em branco
+    @IsNotEmpty() // Não aceitar titulo vazio
+    @Column({length: 100, nullable: false}) // Definir o tamanho e não aceitar valor nulo
     titulo: string;
-
-    @Transform(({ value }: TransformFnParams) => value?.trim()) // bloquear apenas espacos em branco
+ 
+    @Transform(({ value }: TransformFnParams) => value?.trim())
     @IsNotEmpty()
     @Column({length: 1000, nullable: false})
     texto: string;
 
-    @UpdateDateColumn() // a data e a hora serao preenchiadas automaticamente
+    @UpdateDateColumn() // A data e a hora serão preenchidas automaticamente
     data: Date;
 
-    @ManyToOne(() => Tema , (tema) => tema.postagem,{
+    // Muitos para Um, ou seja, Muitas postagens, possuem um tema
+    @ManyToOne(() => Tema, (tema) => tema.postagem, {
         onDelete: "CASCADE"
     })
-    tema:Tema
+    tema: Tema;
 
-    @ManyToOne(() => Usuario , (usuario) => usuario.postagem,{
+    @ManyToOne(() => Usuario, (usuario) => usuario.postagem, {
         onDelete: "CASCADE"
     })
-    usuario:Usuario 
-
+    usuario: Usuario;
 }
