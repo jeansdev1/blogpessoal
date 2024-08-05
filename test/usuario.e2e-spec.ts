@@ -105,5 +105,6 @@ describe('Testes dos Módulos Usuario e Auth (e2e)', () => {
     .send({})
     .expect(200)
   })
+  
 
 });
